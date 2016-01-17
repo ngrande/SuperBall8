@@ -12,20 +12,51 @@ public class MapGenerator : MonoBehaviour
 	[Range(0,100)]
 	public int
 		randomFillPercent;
-	public Mesh[] pickups;
-
+	public GameObject[] pickups;
+	public GameObject player;
 	int[,] map;
+	System.Random rnd = new System.Random();
 
 	void Start ()
 	{
 		GenerateMap ();
+		RandomizePickupPositions ();
+		SetPlayerPosition ();
+	}
+
+	void SetPlayerPosition ()
+	{
+		int rndX = -1;
+		int rndY = -1;
+		do {
+			rndX = rnd.Next (0, width - 1);
+			rndY = rnd.Next (0, height - 1);
+		} while (map[rndX, rndY] == 1);
+				
+		player .transform.position = new Vector3 (-width / 2 + .5f + rndX, 0, -height / 2 + .5f + rndY);
+		player .SetActive (true);
+	}
+
+	void RandomizePickupPositions ()
+	{
+		for (int i = 0; i < pickups.Length; i++) {
+			int rndX = -1;
+			int rndY = -1;
+			do {
+				rndX = rnd.Next (0, width - 1);
+				rndY = rnd.Next (0, height - 1);
+			} while (map[rndX, rndY] == 1);
+			
+			pickups [i].transform.position = new Vector3 (-width / 2 + .5f + rndX, 0, -height / 2 + .5f + rndY);
+			pickups [i].SetActive (true);
+		}
 	}
 
 	void Update ()
 	{
-		if (Input.GetMouseButtonDown (0)) {
-			GenerateMap ();
-		}
+//		if (Input.GetMouseButtonDown (0)) {
+//			GenerateMap ();
+//		}
 	}
 
 	void GenerateMap ()
@@ -302,7 +333,7 @@ public class MapGenerator : MonoBehaviour
 	void RandomFillMap ()
 	{
 		if (useRandomSeed) {
-			seed = Time.time.ToString ();
+			seed = DateTime.UtcNow.ToString ();
 		}
 
 		System.Random rnd = new System.Random (seed.GetHashCode ());
