@@ -40,7 +40,7 @@ public class MeshGenerator : MonoBehaviour
 		mesh.triangles = triangles.ToArray ();
 		mesh.RecalculateNormals ();
 
-		int tileAmount = 10;
+		int tileAmount = 5;
 		Vector2[] uvs = new Vector2[verticies.Count];
 		for (int i = 0; i < uvs.Length; i++) {
 			float percentX = Mathf.InverseLerp(-map.GetLength(0)/2*squareSize, map.GetLength(0)/2*squareSize, verticies[i].x) * tileAmount;
