@@ -12,7 +12,7 @@ public class MapGenerator : MonoBehaviour
 	[Range(0,100)]
 	public int
 		randomFillPercent;
-	public GameObject[] pickups;
+	public GameObject[] randomObjects;
 	public GameObject player;
 	int[,] map;
 	System.Random rnd = new System.Random();
@@ -39,7 +39,7 @@ public class MapGenerator : MonoBehaviour
 
 	void RandomizePickupPositions ()
 	{
-		for (int i = 0; i < pickups.Length; i++) {
+		for (int i = 0; i < randomObjects.Length; i++) {
 			int rndX = -1;
 			int rndY = -1;
 			do {
@@ -47,8 +47,8 @@ public class MapGenerator : MonoBehaviour
 				rndY = rnd.Next (0, height - 1);
 			} while (map[rndX, rndY] == 1);
 			
-			pickups [i].transform.position = new Vector3 (-width / 2 + .5f + rndX, 0, -height / 2 + .5f + rndY);
-			pickups [i].SetActive (true);
+			randomObjects [i].transform.position = new Vector3 (-width / 2 + .5f + rndX, 0, -height / 2 + .5f + rndY);
+			randomObjects [i].SetActive (true);
 		}
 	}
 
