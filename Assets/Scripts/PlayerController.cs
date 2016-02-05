@@ -5,9 +5,10 @@ using System.Diagnostics;
 
 public class PlayerController : MonoBehaviour {
 	
-	public float speed;
+	public float speed = 10;
 	public Text countText;
 	public Text popupText;
+	public float pickupBoost = 2;
 	
 	private Rigidbody rb;
 	private int count;
@@ -40,6 +41,7 @@ public class PlayerController : MonoBehaviour {
 		if (other.gameObject.CompareTag ("Pickup")) {
 			other.gameObject.SetActive (false);
 			count++;
+			speed += pickupBoost;
 			UpdateCountTxt ();
 		} 
 	}
@@ -59,6 +61,11 @@ public class PlayerController : MonoBehaviour {
 		}else if (count >= 8) {
 			watch.Stop ();
 			popupText.text = "You win!";
+		}
+
+		if (loose || count >= 8) {
+			// Restart the level (generate new map, etc).
+			Application.LoadLevel("SuperBall8_3D");
 		}
 	}
 }
