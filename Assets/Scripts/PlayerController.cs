@@ -14,19 +14,20 @@ public class PlayerController : MonoBehaviour {
 	private int count;
 	private Stopwatch watch = new Stopwatch();
 	private bool loose = false;
+	private bool gameOver = false;
 	
 	// Use this for initialization
 	void Start () {
 		rb = GetComponent<Rigidbody>();
 		count = 0;
-		UpdateCountTxt();
+		EvaluateProgress();
 		popupText.text = string.Empty;
 
 		watch.Start ();
 	}
 	
 	void FixedUpdate() {
-		if (!loose) {
+		if (!gameOver) {
 			float moveHorizontal = Input.GetAxis ("Horizontal");
 			float moveVertical = Input.GetAxis ("Vertical");
 			Vector3 movement = new Vector3 (moveHorizontal, 0.0f, moveVertical);
@@ -34,7 +35,7 @@ public class PlayerController : MonoBehaviour {
 			transform.position = new Vector3(transform.position.x, 0, transform.position.z);
 		}
 		
-		UpdateCountTxt();
+		EvaluateProgress();
 	}
 	
 	void OnTriggerEnter(Collider other) {
@@ -42,7 +43,7 @@ public class PlayerController : MonoBehaviour {
 			other.gameObject.SetActive (false);
 			count++;
 			speed += pickupBoost;
-			UpdateCountTxt ();
+			EvaluateProgress ();
 		} 
 	}
 	
@@ -52,20 +53,26 @@ public class PlayerController : MonoBehaviour {
 		}
 	}
 	
-	void UpdateCountTxt()
+	void EvaluateProgress()
 	{
 		countText.text = string.Format ("{0} :: {1}", "Picked up: " + count.ToString (), "Time: " + watch.Elapsed);
+		if (loose || count >= 8) {
+			gameOver = true;
+		}
+
 		if (loose) {
 			watch.Stop ();
-			popupText.text = "You loose!";
+			popupText.text = "You loose! Press <ENTER> to restart";
 		}else if (count >= 8) {
 			watch.Stop ();
 			popupText.text = "You win!";
 		}
 
-		if (loose || count >= 8) {
+		if (gameOver) {
 			// Restart the level (generate new map, etc).
-			Application.LoadLevel("SuperBall8_3D");
+			if (Input.GetKeyDown(KeyCode.Return)) {
+				Application.LoadLevel("SuperBall8_3D");
+			}
 		}
 	}
 }
